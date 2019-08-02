@@ -1,0 +1,5 @@
+.idea/
+venv/
+*.swp
+__pychache__/
+
