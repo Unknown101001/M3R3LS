@@ -35,13 +35,28 @@ class MainWindow(QMainWindow):
 
     def initUI(self):
         """
+        styles
+        """
+        self.setStyleSheet("background-image: url(img/background.jpg)")
+        """
         background
         """
-        self.img = QImage("img/background.png")
+        self.img = QImage("img/background.jpg")
         self.simg = self.img.scaled(QSize(self.width(), self.height()))
         palette = QPalette()
         palette.setBrush(10, QBrush(self.simg))
         self.setPalette(palette)
+
+
+        self.boardlabel = QLabel(self)
+        pixmap = QPixmap("img/board.jpg")
+        self.boardlabel.setPixmap(pixmap)
+        self.boardlabel.resize(self.height()-60, self.height()-60)
+        self.boardlabel.move(30,30)
+        self.boardlabel.hide()
+
+
+
 
         """
         menu
@@ -63,6 +78,7 @@ class MainWindow(QMainWindow):
         self.b_quitgame.move(self.width()/2 - 80, self.height()/2+10)
 
         self.whichgame = False
+        self.game_started = False
         g = abs(min([100, self.width() / 2 - 60]))
 
         self.b_player = PicButton(QPixmap("img/hoodie.png"),self)
@@ -77,23 +93,36 @@ class MainWindow(QMainWindow):
         self.b_com.move(self.width()/2 + 20,self.height()/2)
         self.b_com.hide()
 
-    """
-        styles
-        """
+
     def start_playergame(self):
-        pass
+        self.hide_whichgame()
+        self.game_started = True
+        self.boardlabel.show()
+        print("Starting Game against Player")
     def start_comgame(self):
-        pass
+        self.hide_whichgame()
+        self.game_started = True
+        self.boardlabel.show()
+        print("Starting Game against COM")
     def newgame(self):
         print("new")
         self.hide_menu()
         self.whichgame = True
         self.b_com.show()
         self.b_player.show()
+        g = abs(min([100, self.width() / 2 - 60]))
+        self.b_player.resize(g, g)
+        self.b_player.move(self.width() / 2 - g - 20, self.height() / 2)
+        self.b_com.resize(g, g)
+        self.b_com.move(self.width() / 2 + 20, self.height() / 2)
     def quitgame(self):
         self.close()
 
     def show_menu(self):
+        if self.whichgame:
+            self.hide_whichgame()
+        self.b_newgame.move(self.width() / 2 - 80, self.height() / 2 - 50)
+        self.b_quitgame.move(self.width() / 2 - 80, self.height() / 2 + 10)
         self.menushown = True
         self.b_newgame.show()
         self.b_quitgame.show()
@@ -104,6 +133,10 @@ class MainWindow(QMainWindow):
         self.b_newgame.hide()
         self.menushown = False
         print("disappear")
+    def hide_whichgame(self):
+        self.whichgame = False
+        self.b_player.hide()
+        self.b_com.hide()
     def resizedwin(self):
         self.simg = self.img.scaled(QSize(self.width(), self.height()))
         palette = QPalette()
@@ -114,15 +147,17 @@ class MainWindow(QMainWindow):
             self.b_newgame.move(self.width() / 2 - 80, self.height() / 2 - 50)
             self.b_quitgame.move(self.width() / 2 - 80, self.height() / 2 + 10)
         if self.whichgame:
-            g = abs(min([160, self.width() / 2 - 60]))
+            g = abs(min([100, self.width() / 2 - 60]))
             self.b_player.resize(g, g)
-            self.b_player.move(self.width() - g - 20, self.height())
+            self.b_player.move(self.width()/2 - g - 20, self.height()/2)
             self.b_com.resize(g, g)
-            self.b_com.move(self.width() + 20, self.height())
+            self.b_com.move(self.width()/2 + 20, self.height()/2)
+        if self.game_started:
+            self.boardlabel.resize(self.height()-60, self.height()-60)
 
 
     def menu_pressed(self):
-        if self.menushown:
+        if self.menushown and self.game_started:
             self.hide_menu()
             self.menushown = False
         else:
