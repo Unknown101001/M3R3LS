@@ -65,10 +65,12 @@ class MainWindow(QMainWindow):
         """
         self.gamewidget = Game_Widget()
         self.scorewidget = Score_Widget()
-        self.horizontalGroupBox = QGroupBox()
+        self.horizontalGroupBox = QGroupBox("grid")
+        self.horizontalGroupBox.move(30,30)
+        self.horizontalGroupBox.resize(self.width()-60,self.height()-60)
         _layout = QGridLayout()
-        _layout.setColumnStretch(1,2)
-        _layout.setColumnStretch(2,2)
+        _layout.setColumnStretch(1,4)
+        _layout.setColumnStretch(2,4)
         _layout.addWidget(self.gamewidget,0,0)
         _layout.addWidget(self.scorewidget,0,1)
         self.horizontalGroupBox.setLayout(_layout)
@@ -76,6 +78,10 @@ class MainWindow(QMainWindow):
         windowLayout = QVBoxLayout()
         windowLayout.addWidget(self.horizontalGroupBox)
         self.setLayout(windowLayout)
+
+
+        #self.gamewidget.hide()
+        #self.scorewidget.hide()
 
         """
         self.gamewidget = Game_Widget()
@@ -151,6 +157,7 @@ class MainWindow(QMainWindow):
         self.b_com.clicked.connect(self.start_comgame)
         self.b_com.move(self.width() / 2 + 20, self.height() / 2)
         self.b_com.hide()
+
 
     def showgame(self):
         self.overlay.hide()
