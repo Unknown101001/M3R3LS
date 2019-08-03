@@ -1,4 +1,4 @@
-from PyQt5 import QtWidgets, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -17,6 +17,20 @@ class PicButton(QAbstractButton):
 
     def sizeHint(self):
         return self.pixmap.size()
+
+
+class Overlay(QWidget):
+    def __init__(self, parent=None):
+        QWidget.__init__(self, parent)
+        self.setPalette(QtGui.QPalette(QtCore.Qt.transparent))
+        self.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents)
+
+    def paintEvent(self, e):
+        qp = QtGui.QPainter()
+        qp.begin(self)
+        qp.setBrush(QtGui.QColor(0, 0, 0, 120))
+        qp.drawRect(-1, -1, self.width(), self.height())
+        qp.end()
 
 
 class MainWindow(QMainWindow):
@@ -47,16 +61,20 @@ class MainWindow(QMainWindow):
         palette.setBrush(10, QBrush(self.simg))
         self.setPalette(palette)
 
-
+        '''
         self.boardlabel = QLabel(self)
         pixmap = QPixmap("img/board.jpg")
         self.boardlabel.setPixmap(pixmap)
         self.boardlabel.resize(self.height()-60, self.height()-60)
         self.boardlabel.move(30,30)
         self.boardlabel.hide()
+        '''
 
-
-
+        """
+        overlay
+        """
+        self.overlay = Overlay(self)
+        self.overlay.resize(self.width() + 1, self.height() + 1)
 
         """
         menu
@@ -94,17 +112,23 @@ class MainWindow(QMainWindow):
         self.b_com.hide()
 
 
+
+
     def start_playergame(self):
         self.hide_whichgame()
         self.game_started = True
-        self.boardlabel.show()
+        self.overlay.hide()
+        #self.boardlabel.show()
         print("Starting Game against Player")
     def start_comgame(self):
         self.hide_whichgame()
         self.game_started = True
-        self.boardlabel.show()
+        self.overlay.hide()
+        #self.boardlabel.show()
         print("Starting Game against COM")
     def newgame(self):
+        if self.game_started:
+            self.game_started = False
         print("new")
         self.hide_menu()
         self.whichgame = True
@@ -119,6 +143,7 @@ class MainWindow(QMainWindow):
         self.close()
 
     def show_menu(self):
+        self.overlay.show()
         if self.whichgame:
             self.hide_whichgame()
         self.b_newgame.move(self.width() / 2 - 80, self.height() / 2 - 50)
@@ -129,6 +154,8 @@ class MainWindow(QMainWindow):
         print("appear")
 
     def hide_menu(self):
+        if self.game_started:
+            self.overlay.hide()
         self.b_quitgame.hide()
         self.b_newgame.hide()
         self.menushown = False
@@ -142,6 +169,7 @@ class MainWindow(QMainWindow):
         palette = QPalette()
         palette.setBrush(10, QBrush(self.simg))
         self.setPalette(palette)
+        self.overlay.resize(self.width()+1,self.height()+1)
         self.menu.move(self.width() - 40, 8)
         if self.menushown:
             self.b_newgame.move(self.width() / 2 - 80, self.height() / 2 - 50)
@@ -152,8 +180,8 @@ class MainWindow(QMainWindow):
             self.b_player.move(self.width()/2 - g - 20, self.height()/2)
             self.b_com.resize(g, g)
             self.b_com.move(self.width()/2 + 20, self.height()/2)
-        if self.game_started:
-            self.boardlabel.resize(self.height()-60, self.height()-60)
+           #if self.game_started:
+            #self.boardlabel.resize(self.height()-60, self.height()-60)
 
 
     def menu_pressed(self):
