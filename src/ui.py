@@ -60,11 +60,29 @@ class MainWindow(QMainWindow):
         palette = QPalette()
         palette.setBrush(10, QBrush(self.simg))
         self.setPalette(palette)
+        """
+        layout and widgets
+        """
+        self.gamewidget = Game_Widget()
+        self.scorewidget = Score_Widget()
+        self.horizontalGroupBox = QGroupBox()
+        _layout = QGridLayout()
+        _layout.setColumnStretch(1,2)
+        _layout.setColumnStretch(2,2)
+        _layout.addWidget(self.gamewidget,0,0)
+        _layout.addWidget(self.scorewidget,0,1)
+        self.horizontalGroupBox.setLayout(_layout)
 
+        windowLayout = QVBoxLayout()
+        windowLayout.addWidget(self.horizontalGroupBox)
+        self.setLayout(windowLayout)
+
+        """
         self.gamewidget = Game_Widget()
         self.gamewidget.resize(self.height() - 60, self.height() - 60)
         self.gamewidget.move(30,30)
         self.gamewidget.hide()
+        """
 
         """
         self.boardlabel = QLabel(self)   #todo make a container
@@ -76,10 +94,12 @@ class MainWindow(QMainWindow):
         self.boardlabel.hide()
         """
 
+        """
         self.scorewidget = Score_Widget()
         self.scorewidget.resize(self.width() - self.height() + 60 - 90, self.height() - 100)
         self.scorewidget.move(self.width() -30 - (self.width() - self.height() + 60 - 90) , 50)
         self.scorewidget.hide()
+        """
 
         """
         self.scoreboardlabel = QLabel(self)  #todo make a container
