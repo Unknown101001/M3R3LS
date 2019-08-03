@@ -2,7 +2,7 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-
+from widgets import *
 import sys
 
 
@@ -61,7 +61,7 @@ class MainWindow(QMainWindow):
         palette.setBrush(10, QBrush(self.simg))
         self.setPalette(palette)
 
-        self.gamewidget = Game_Widget(self)
+        self.gamewidget = Game_Widget()
         self.gamewidget.resize(self.height() - 60, self.height() - 60)
         self.gamewidget.move(30,30)
         self.gamewidget.hide()
@@ -76,7 +76,7 @@ class MainWindow(QMainWindow):
         self.boardlabel.hide()
         """
 
-        self.scorewidget = Score_Widget(self)
+        self.scorewidget = Score_Widget()
         self.scorewidget.resize(self.width() - self.height() + 60 - 90, self.height() - 100)
         self.scorewidget.move(self.width() -30 - (self.width() - self.height() + 60 - 90) , 50)
         self.scorewidget.hide()

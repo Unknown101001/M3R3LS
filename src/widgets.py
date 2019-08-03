@@ -5,24 +5,26 @@ from PyQt5.QtWidgets import *
 
 import sys
 
-class Game_Widget(QWidget):
+class Game_Widget(Q):
+    resized = QtCore.pyqtSignal()
     def __init__(self):
-        super(QWidget, self).__init__()
+        super(QFrame, self).__init__()
         self.resized.connect(self.resizegame)
     def resizeEvent(self, a0: QtGui.QResizeEvent) -> None:
         self.resized.emit()
-        return super(QWidget, self).resizeEvent(a0)
+        return super(Game_Widget, self).resizeEvent(a0)
     def resizegame(self):
         pass
 
 class Score_Widget(QWidget):
+    resized = QtCore.pyqtSignal()
     def __init__(self):
         super(QWidget, self).__init__()
         self.resized.connect(self.resizegame)
 
     def resizeEvent(self, a0: QtGui.QResizeEvent) -> None:
         self.resized.emit()
-        return super(QWidget, self).resizeEvent(a0)
+        return super(Score_Widget, self).resizeEvent(a0)
 
     def resizegame(self):
         pass
