@@ -63,21 +63,35 @@ class MainWindow(QMainWindow):
         """
         layout and widgets
         """
+
+        self.horizontalGroupBox = QGroupBox()
+        self.setCentralWidget(self.horizontalGroupBox)
+
         self.gamewidget = Game_Widget()
         self.scorewidget = Score_Widget()
-        self.horizontalGroupBox = QGroupBox("grid")
+
+        b = min([self.height() - 60, self.width() - 360])
+        self.gamewidget.resize(b, b)
+        self.scorewidget.resize(self.width() - b - 90, b - 40)
+        self.scorewidget.move(self.width() - 30 - (self.width() - b - 90), 50)
+
         self.horizontalGroupBox.move(30,30)
-        self.horizontalGroupBox.resize(self.width()-60,self.height()-60)
-        _layout = QGridLayout()
-        _layout.setColumnStretch(1,4)
-        _layout.setColumnStretch(2,4)
+        self.horizontalGroupBox.resize(self.width()-100,self.height()-100)
+        _layout = QGridLayout(self.horizontalGroupBox)
         _layout.addWidget(self.gamewidget,0,0)
         _layout.addWidget(self.scorewidget,0,1)
-        self.horizontalGroupBox.setLayout(_layout)
+        _layout.setHorizontalSpacing(50)
+        _layout.setColumnMinimumWidth(0,self.height())
 
-        windowLayout = QVBoxLayout()
-        windowLayout.addWidget(self.horizontalGroupBox)
-        self.setLayout(windowLayout)
+
+        self.horizontalGroupBox.setLayout(_layout)
+        self.gamewidget.hide()
+        self.scorewidget.hide()
+        self.resize(self.width(),self.height())
+
+
+
+
 
 
         #self.gamewidget.hide()
