@@ -70,10 +70,7 @@ class MainWindow(QMainWindow):
         self.gamewidget = Game_Widget()
         self.scorewidget = Score_Widget()
 
-        b = min([self.height() - 60, self.width() - 360])
-        self.gamewidget.resize(b, b)
-        self.scorewidget.resize(self.width() - b - 90, b - 40)
-        self.scorewidget.move(self.width() - 30 - (self.width() - b - 90), 50)
+
 
         self.horizontalGroupBox.move(30,30)
         self.horizontalGroupBox.resize(self.width()-100,self.height()-100)
@@ -82,6 +79,13 @@ class MainWindow(QMainWindow):
         _layout.addWidget(self.scorewidget,0,1)
         _layout.setHorizontalSpacing(50)
         _layout.setColumnMinimumWidth(0,self.height())
+        _layout.rowMinimumHeight(int(2*self.width()/3))
+
+        b = min([self.height() - 60, self.width() - 360])
+        self.gamewidget.resize(b, b)
+        self.scorewidget.resize(self.width() - b - 90, b)
+
+
 
 
         self.horizontalGroupBox.setLayout(_layout)
@@ -89,47 +93,6 @@ class MainWindow(QMainWindow):
         self.scorewidget.hide()
         self.resize(self.width(),self.height())
 
-
-
-
-
-
-        #self.gamewidget.hide()
-        #self.scorewidget.hide()
-
-        """
-        self.gamewidget = Game_Widget()
-        self.gamewidget.resize(self.height() - 60, self.height() - 60)
-        self.gamewidget.move(30,30)
-        self.gamewidget.hide()
-        """
-
-        """
-        self.boardlabel = QLabel(self)   #todo make a container
-        self.img2 = QImage("img/board.jpg")
-        self.simg2 = self.img2.scaled(QSize(self.height() - 60, self.height() - 60))
-        self.boardlabel.setPixmap(QPixmap.fromImage(self.simg2))
-        self.boardlabel.resize(self.height() - 60, self.height() - 60)
-        self.boardlabel.move(30, 30)
-        self.boardlabel.hide()
-        """
-
-        """
-        self.scorewidget = Score_Widget()
-        self.scorewidget.resize(self.width() - self.height() + 60 - 90, self.height() - 100)
-        self.scorewidget.move(self.width() -30 - (self.width() - self.height() + 60 - 90) , 50)
-        self.scorewidget.hide()
-        """
-
-        """
-        self.scoreboardlabel = QLabel(self)  #todo make a container
-        self.img3 = QImage("img/scoreboard.png")
-        self.simg3 = self.img3.scaled(QSize(self.width() - self.height() + 60 - 90, self.height() - 100))
-        self.scoreboardlabel.setPixmap(QPixmap.fromImage(self.simg3))
-        self.scoreboardlabel.resize(self.width() - self.height() + 60 - 90, self.height() - 100)
-        self.scoreboardlabel.move(self.width() -30 - (self.width() - self.height() + 60 - 90) , 50)
-        self.scoreboardlabel.hide()
-        """
 
         """
         overlay
@@ -257,22 +220,12 @@ class MainWindow(QMainWindow):
             self.b_com.resize(g, g)
             self.b_com.move(self.width() / 2 + 20, self.height() / 2)
         if self.game_started:
-            """
-            b = min([self.height() - 60, self.width() - 360])
-            self.simg2 = self.img2.scaled(QSize(b, b))
-            self.boardlabel.setPixmap(QPixmap.fromImage(self.simg2))
-            self.boardlabel.resize(b, b)
-            """
+
             b = min([self.height() - 60, self.width() - 360])
             self.gamewidget.resize(b,b)
-            self.scorewidget.resize(self.width() - b - 90, b - 40)
-            self.scorewidget.move(self.width() - 30 - (self.width() - b - 90), 50)
-            """
-            self.simg3 = self.img3.scaled(QSize(self.width()- b - 90, b -40 ))
-            self.scoreboardlabel.setPixmap(QPixmap.fromImage(self.simg3))
-            self.scoreboardlabel.resize(self.width() - b - 90, b - 40)
-            self.scoreboardlabel.move(self.width() - 30 - (self.width() - b - 90), 50)
-            """
+            self.scorewidget.resize(self.width() - b - 90, b)
+            self.scorewidget.move(self.width() - 30 - (self.width() - b - 90),15)
+
 
     def menu_pressed(self):
         if self.menushown and self.game_started:
