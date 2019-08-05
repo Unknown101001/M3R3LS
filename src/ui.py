@@ -3,6 +3,10 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from widgets import *
+from game import Game
+from player import Player
+from board import Board
+
 import sys
 
 
@@ -67,7 +71,12 @@ class MainWindow(QMainWindow):
         self.horizontalGroupBox = QGroupBox()
         self.setCentralWidget(self.horizontalGroupBox)
 
-        self.gamewidget = Game_Widget()
+        self.board = Board()
+        self.player1 = Player()
+        self.player2 = Player()
+        self.player1.set_opps(self.player2)
+        self.game = Game(self.board,self.player1,self.player2)
+        self.gamewidget = Game_Widget(self.game)
         self.scorewidget = Score_Widget()
 
 
