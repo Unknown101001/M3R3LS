@@ -77,7 +77,7 @@ class MainWindow(QMainWindow):
         _layout = QGridLayout(self.horizontalGroupBox)
         _layout.addWidget(self.gamewidget,0,0)
         _layout.addWidget(self.scorewidget,0,1)
-        _layout.setHorizontalSpacing(50)
+        _layout.setHorizontalSpacing(40)
         _layout.setColumnMinimumWidth(0,self.height())
         _layout.rowMinimumHeight(int(2*self.width()/3))
 
