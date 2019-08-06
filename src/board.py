@@ -90,17 +90,18 @@ class Board:
         :param vertex:
         :return:
         """
+        vertexocc = self.vertices[vertex].occ
         current_v = stone.vert
         if player.phase == 0:  # setzen
-            if not vertex.occ:
+            if not vertexocc:
                 return True
         elif player.phase == 1:  # ziehen
-            if self.adjazenz_matrix[current_v, vertex] == 1 and not vertex.occ:
+            if self.adjazenz_matrix[current_v, vertex] == 1 and not vertexocc:
                 return True
         elif player.phase == 2:  # entfernen
             if stone.removable():
                 return True
         elif player.phase == 3:  # springen
-            if not vertex.occ:
+            if not vertexocc:
                 return True
         return False

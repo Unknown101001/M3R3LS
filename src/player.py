@@ -5,8 +5,9 @@ class Player:
         self.n_a = 0
         self.stones = []
         self.t_lm = 0
-        self.status = 0  # 0-warte auf Zug, 1-Zug beendet
+        self.status = 0  # 0-warte auf Zug, 1-warte weiter 2-zug beendet
         self.opp = None
+        self.com = False
 
     def set_opps(self, player2):
         self.opp = player2
@@ -14,8 +15,10 @@ class Player:
 
     def action(self, board, target, stone=None):  #
         if self.phase == 0:  # setzen
-            stone = next([stone for stone in self.stones if stone.status == 0])
+            print(self.stones)
+            stone = next(iter([stone for stone in self.stones if not stone.aktiv]))
             if board.path_check(self, stone, target):  #
+                stone.aktiv = True
                 stone.vert = target
                 board.vertices[stone.vert].occ = True
                 self.n_ia -= 1
@@ -95,6 +98,7 @@ class Player:
                     st.muhle = True
             else:
                 stone.muhle = False
-
+    def end_move(self):
+        pass
     def decline(self):
         print("Wrong")

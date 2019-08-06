@@ -1,8 +1,9 @@
 class Stone:
-    def __init__(self):
+    def __init__(self,color):
         self.vert = None
-        self.color = ""
+        self.color = color
         self.muhle = False
+        self.aktiv =  False
 
     def removable(self):
         return not self.muhle

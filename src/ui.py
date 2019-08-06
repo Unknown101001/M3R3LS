@@ -159,6 +159,12 @@ class MainWindow(QMainWindow):
         self.scorewidget.hide()
 
     def start_playergame(self):
+        self.newboard = Board()
+        self.newplayer1 = Player()
+        self.newplayer2 = Player()
+        self.newplayer1.set_opps(self.newplayer2)
+        self.game = Game(self.newboard, self.newplayer1, self.newplayer2)
+
         self.hide_whichgame()
         self.game_started = True
         self.showgame()
