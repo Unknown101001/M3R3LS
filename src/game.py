@@ -11,21 +11,42 @@ class Game:
         self.player2 = player2
         self.com = None
         self.on_move = 1  # 0-com 1-player1 2-player2
+        if player2 is None:
+            self.players =[player1]
+        else:
+            self.players = [player1,player2]
         self.init_Game()
-        self.players =[player1]
     def init_Player(self,p,color):
         for i in range(p.n_ia):
             stone = Stone(color)
-            p.stones.append(stone)
+            p.inaktiv_stones.append(stone)
     def init_Game(self):
-        self.init_Player(self.player1,"dunkel")
+        colors = ["dunkel","hell"]
+        i = 0
+        for p in self.players:
+            self.init_Player(p,colors[i])
+            i += 1
 
     def clicked_vert(self, vn, vn_old):
-        if self.on_move == 1:
-            self.player1.action(self.board, vn)
-            if self.player1.status>=2:
-                self.player1.end_move()
-                print("Move done")
-            if self.commode:
-                self.on_move = 0
-            else: self.on_move = 2
+        if vn is None:
+            print("Wrong click")
+        else:
+            if self.on_move == 1:
+                self.player1.action(self.board, vn)
+                if self.player1.status>=2:
+                    self.player1.end_move()
+                    print("Move done")
+                    print()
+                if self.commode:
+                    self.on_move = 0
+                else: self.on_move = 2
+            elif self.on_move == 2:
+                self.player2.action(self.board, vn)
+                if self.player2.status >= 2:
+                    self.player2.end_move()
+                    print("Move done")
+                if self.commode:
+                    self.on_move = 0
+                else:
+                    self.on_move = 1
+

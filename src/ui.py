@@ -164,6 +164,8 @@ class MainWindow(QMainWindow):
         self.newplayer2 = Player()
         self.newplayer1.set_opps(self.newplayer2)
         self.game = Game(self.newboard, self.newplayer1, self.newplayer2)
+        self.game.players = [self.newplayer1,self.newplayer2]
+        self.game.init_Player(self.newplayer2,"hell")
 
         self.hide_whichgame()
         self.game_started = True

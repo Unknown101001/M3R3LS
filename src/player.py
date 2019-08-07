@@ -1,9 +1,10 @@
 class Player:
     def __init__(self):
         self.phase = 0  # 0-setzen 1-ziehen 2-entfernen 3-springen
-        self.n_ia = 9
+        self.n_ia = 4
         self.n_a = 0
-        self.stones = []
+        self.inaktiv_stones = []
+        self.aktiv_stones = []
         self.t_lm = 0
         self.status = 0  # 0-warte auf Zug, 1-warte weiter 2-zug beendet
         self.opp = None
@@ -14,9 +15,15 @@ class Player:
         player2.opp = self
 
     def action(self, board, target, stone=None):  #
+        self.status = 0
+        print(self.phase)
+        print(target)
+        print(stone)
         if self.phase == 0:  # setzen
-            print(self.stones)
-            stone = next(iter([stone for stone in self.stones if not stone.aktiv]))
+            print(self.inaktiv_stones)
+            print(self.aktiv_stones)
+            stone = self.inaktiv_stones.pop()
+            self.aktiv_stones.append(stone)
             if board.path_check(self, stone, target):  #
                 stone.aktiv = True
                 stone.vert = target
@@ -30,17 +37,20 @@ class Player:
                 self.change_phases(1)
 
         elif self.phase == 1:  # ziehen
-            if board.path_check(self, stone, target):
-                oldvert = stone.vert
-                stone.vert = target
-                board.vertices[oldvert].occ = False
-                board.vertices[stone.vert].occ = True
-                m, n = self.check_muhle(board, stone)
-                if m:  # got a muhle               todo: double muhle
-                    self.change_phases(2)
-                    self.status = 1  # move done but another follows
+            if target is not None and stone is not None:
+                if board.path_check(self, stone, target):
+                    oldvert = stone.vert
+                    stone.vert = target
+                    board.vertices[oldvert].occ = False
+                    board.vertices[stone.vert].occ = True
+                    m, n = self.check_muhle(board, stone)
+                    if m:  # got a muhle               todo: double muhle
+                        self.change_phases(2)
+                        self.status = 1  # move done but another follows
+                    else:
+                        self.status = 2  # end of move
                 else:
-                    self.status = 2  # end of move
+                    self.decline()
 
         elif self.phase == 2:  # entfernen
             if any(stone for stone in self.opp.stones if stone.vert == target and not stone.muhle):
@@ -48,6 +58,7 @@ class Player:
                 if board.path_check(self, stonex, target):
                     board.vertices[stonex.vert].occ = False
                     stonex.vert = None
+                    self.opp.aktiv_stones.pop(self.opp.aktiv_stones.index(stonex))
                     self.status = 2  # end of move
                     if self.opp.n_a <= 3:
                         self.opp.change_phases(3)  # springen

@@ -127,7 +127,7 @@ class Game_Widget(QFrame):
             draw_vert(v)
 
         for player in self.game.players:
-            for stone in player.stones:
+            for stone in player.aktiv_stones:
                 if stone.aktiv:
                     vn = stone.vert
                     sx = self.vertices[vn][0]
@@ -136,7 +136,7 @@ class Game_Widget(QFrame):
 
                     #qp = QtGui.QPainter(self)
                     qp.begin(self)
-                    rec = QRect(sx-10,sy-10,50,50)
+                    rec = QRect(sx-5,sy-5,50,50)
                     qp.drawPixmap(rec,self.stone_img[stone.color])
                     qp.end()
 
@@ -147,7 +147,7 @@ class Game_Widget(QFrame):
         for vert in self.vertices:
             if vert[0] <= ox <= vert[0] + self.vertex_size and vert[1] <= oy <= vert[1] + self.vertex_size:
                 return (self.vertices.index(vert))
-        return (-1)
+        return (None)
 
     def mousePressEvent(self, event):
         super(QFrame, self).mousePressEvent(event)
