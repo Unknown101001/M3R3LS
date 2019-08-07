@@ -44,7 +44,6 @@ class Game:
             p = self.players[self.on_move - 1]
         self.perform(p, vn, vn_old)
 
-
     def perform(self, player, vn, vn_old):
         """
         :param player:
@@ -71,17 +70,17 @@ class Game:
 
             elif player.phase == 1:
 
-                done = self.move_stone(player,vn,vn_old)
+                done = self.move_stone(player, vn, vn_old)
                 if done:
                     self.end_move(player)
 
             elif player.phase == 2:
-                done = self.rm_stone()
+                done = self.rm_stone(player, vn)
                 if done:
                     self.end_move(player)
 
             elif player.phase == 3:
-                done = self.jmp_stone(player,vn,vn_old)
+                done = self.jmp_stone(player, vn, vn_old)
                 if done:
                     self.end_move(player)
 
@@ -106,12 +105,13 @@ class Game:
         if self.board.adjazenz_matrix[vn_old, vn] == 1 and not self.board.vertices[vn].occ:
             stone = self.get_stone_at_vert(p, vn_old)
             if stone is None:
-                print("Error occured while moving from "+str(vn_old)+" to "+str(vn)+ " its probably not ur Stone")
+                print(
+                    "Error occured while moving from " + str(vn_old) + " to " + str(vn) + " its probably not ur Stone")
                 return False
             stone.vert = vn
             self.board.vertices[vn_old].occ = False
             self.board.vertices[vn].occ = True
-            if self.muhle_check(p,stone):
+            if self.muhle_check(p, stone):
                 self.newmuhle = True
             return True
         else:
@@ -119,7 +119,7 @@ class Game:
 
     def rm_stone(self, p, vn):
         stone = self.get_stone_at_vert(p.opp, vn)
-        if stone is None or (stone.muhle is True and stone.all_muhles is False) :
+        if stone is None or (stone.muhle is True and stone.all_muhles is False):
             return False
         else:
             stone.activ = False
@@ -129,38 +129,73 @@ class Game:
             self.board.vertices[vn].occ = False
             return True
 
-    def jmp_stone(self,p,vn,vn_old):
+    def jmp_stone(self, p, vn, vn_old):
         if not self.board.vertices[vn].occ:
             stone = self.get_stone_at_vert(p, vn_old)
             stone.vert = vn
             self.board.vertices[vn_old].occ = False
             self.board.vertices[vn].occ = True
-            if self.muhle_check(p,stone):
+            if self.muhle_check(p, stone):
                 self.newmuhle = True
             return True
         else:
             return False
 
+    def same_horizontal_line(self, stone1, stone2):
+        v1 = self.board.vertices[stone1.vert]
+        v2 = self.board.vertices[stone2.vert]
+        x1 = v1.x
+        y1 = v1.y
+        x2 = v2.x
+        y2 = v2.y
+        if y1 == y2 and ((stone1.vert <= 11 and stone2.vert <= 11) or (stone1.vert >= 12 and stone2.vert >= 12)):
+            return True
+        else:
+            return False
 
-    def muhle_check(self,player,stone):  # TODO : MUHLE CHECK
-        vn = stone.vert
-        pass
+    def same_vertical_line(self, stone1, stone2):
+        v1 = self.board.vertices[stone1.vert]
+        v2 = self.board.vertices[stone2.vert]
+        x1 = v1.x
+        y1 = v1.y
+        x2 = v2.x
+        y2 = v2.y
+        if x1 == x2 and ((stone1.vert <= 11 and stone2.vert <= 11) or (stone1.vert >= 12 and stone2.vert >= 12)):
+            return True
+        else:
+            return False
 
+    def muhle_check(self, player, stone):
+        if player.phase == 0:
+            return False
+        horizontal_neighbourhood = []
+        vertical_neighbourhood = []
+        for stone2 in player.activ_stones:
+            if self.same_horizontal_line(stone, stone2):
+                horizontal_neighbourhood.append(stone2)
+            elif self.same_vertical_line(stone, stone2):
+                vertical_neighbourhood.append(stone2)
+        if len(horizontal_neighbourhood) == 3 or len(vertical_neighbourhood) == 3:
+            if debugmode:
+                print("Got a Muhle for Vertex " + str(stone.vert))
+            return True
+        else:
+            return False
 
     def set_muhles(self):
         for p in self.players:
             i = 0
             for s in p.activ_stones:
-                if self.muhle_check(p,s):
+                if self.muhle_check(p, s):
                     s.muhle = True
                     i += 1
                 else:
                     s.muhle = False
-                if i >= len(p.aktiv_stones):
-                    for s in p.aktiv_stones:
+                if i >= len(p.activ_stones):
+                    for s in p.activ_stones:
                         s.all_muhles = True
                 else:
-                    for s in p.aktiv_stones:
+                    for s in p.activ_stones:
                         s.all_muhles = False
 
     def check_phases(self):
@@ -174,13 +209,13 @@ class Game:
                     p.phase = 2
             else:
                 if not self.newmuhle:
-                    p.phase = 1
-                else:
                     p.phase = 3
+                else:
+                    p.phase = 2
 
     def end_move(self, player):
         self.check_phases()
-        self.newmuhle = False
+
         self.set_muhles()
         if player.phase != 2:
             player.status = 2
@@ -194,8 +229,26 @@ class Game:
         if self.commode:
             time.sleep(1)
             self.perform_com_move()
+        elif player.status == 1:
+            print("Remove a Stone")
         else:
             self.on_move = self.players.index(player.opp) + 1
+        self.newmuhle = False
+        self.check_for_win()
 
-    def perform_com_move(self):  #todo COM
-        pass
+    def perform_com_move(self):  # todo COM
+        time.sleep(1)
+        print("Dont know what to do")
+
+    def check_for_win(self):  # todo remis
+        for p in self.players:
+            if len(p.inactiv_stones) + len(p.activ_stones) < 3:
+                winner = p.opp
+                index = self.players.index(p.opp)
+                if self.commode:
+                    if index > 0:
+                        print("Der Bot gewinnt")
+                    else:
+                        print("Der Spieler gewinnt")
+                else:
+                    print("Spieler" + str(index + 1) + " gewinnt!")

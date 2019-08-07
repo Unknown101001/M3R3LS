@@ -55,13 +55,14 @@ edges = [(1, 2),
          (14, 21),
          (20, 21),
          (20, 19),
+         (20, 23),
          (11, 19),
          (17, 20)
          ]
 
 
 class Board:
-    def __init__(self, vertices = None):
+    def __init__(self, vertices=None):
         """
         :param vertices: list of coordinates
         """
@@ -73,7 +74,7 @@ class Board:
             self.n = n = 24
             self.adjazenz_matrix = np.zeros((n, n))
             for e in edges:
-                self.adjazenz_matrix[e[0]-1, e[1]-1] = self.adjazenz_matrix[e[1]-1, e[0]-1] = 1
+                self.adjazenz_matrix[e[0] - 1, e[1] - 1] = self.adjazenz_matrix[e[1] - 1, e[0] - 1] = 1
             self.background = "#D8D8D8"
             self.color = "#000000"
         else:
