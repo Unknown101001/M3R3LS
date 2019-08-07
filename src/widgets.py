@@ -189,12 +189,13 @@ class Game_Widget(QFrame):
 class Score_Widget(QFrame):
     resized = QtCore.pyqtSignal()
 
-    def __init__(self):
+    def __init__(self,game):
         super(QFrame, self).__init__()
         self.initUI()
         self.resized.connect(self.resizegame)
         self.setMinimumHeight(200)
         self.setMaximumWidth(300)
+        self.game = game
 
     def initUI(self):
         self.overlay = Overlay(self)

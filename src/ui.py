@@ -27,7 +27,7 @@ class Overlay(QWidget):
     def __init__(self, parent=None):
         QWidget.__init__(self, parent)
         self.setPalette(QtGui.QPalette(QtCore.Qt.transparent))
-        self.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents)
+        #self.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents)
 
     def paintEvent(self, e):
         qp = QtGui.QPainter()
@@ -77,7 +77,7 @@ class MainWindow(QMainWindow):
         self.player1.set_opps(self.player2)
         self.game = Game(self.board,self.player1,self.player2)
         self.gamewidget = Game_Widget(self.game)
-        self.scorewidget = Score_Widget()
+        self.scorewidget = Score_Widget(self.game)
 
 
 
@@ -159,10 +159,13 @@ class MainWindow(QMainWindow):
         self.scorewidget.hide()
 
     def start_playergame(self):
-        self.newboard = Board()
-        self.newplayer1 = Player()
-        self.newplayer2 = Player()
-        self.game = Game(self.newboard, self.newplayer1, self.newplayer2)
+        self.board = Board()
+        self.player1 = Player()
+        self.player2 = Player()
+        self.player1.set_opps(self.player2)
+        self.game = Game(self.board, self.player1, self.player2)
+        self.gamewidget.update()
+        self.scorewidget.update()
 
 
         self.hide_whichgame()
