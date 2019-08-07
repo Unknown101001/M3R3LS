@@ -127,8 +127,8 @@ class Game_Widget(QFrame):
             draw_vert(v)
 
         for player in self.game.players:
-            for stone in player.aktiv_stones:
-                if stone.aktiv:
+            for stone in player.activ_stones:
+                if stone.activ:
                     vn = stone.vert
                     sx = self.vertices[vn][0]
                     sy = self.vertices[vn][1]

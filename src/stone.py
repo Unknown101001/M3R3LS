@@ -3,7 +3,6 @@ class Stone:
         self.vert = None
         self.color = color
         self.muhle = False
-        self.aktiv =  False
+        self.activ =  False
+        self.all_muhles = False
 
-    def removable(self):
-        return not self.muhle
