@@ -196,10 +196,16 @@ class Score_Widget(QFrame):
         self.setMinimumHeight(200)
         self.setMaximumWidth(300)
         self.game = game
+        self.text = "M3R3LS"
 
     def initUI(self):
         self.overlay = Overlay(self)
         self.overlay.resize(self.width() + 1, self.height() + 1)
+
+    def set_text(self,text):
+        self.text = text
+        self.repaint()
+
 
     def resizeEvent(self, a0: QtGui.QResizeEvent) -> None:
         self.resized.emit()
@@ -207,3 +213,17 @@ class Score_Widget(QFrame):
 
     def resizegame(self):
         self.overlay.resize(self.width() + 1, self.height() + 1)
+
+    def paintEvent(self, a0: QtGui.QPaintEvent) -> None:
+        qp = QtGui.QPainter()
+        qp.begin(self)
+        qp.setBrush(QtGui.QColor(43, 29, 14, 120))
+        qp.drawRoundedRect(10,10,self.width()-20, 80,10,10)
+        qp.setFont(QFont("Arial",40))
+        qp.drawText(30,80,self.text)
+        qp.end()
+
+
+
+
+

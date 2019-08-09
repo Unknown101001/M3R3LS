@@ -86,7 +86,7 @@ class MainWindow(QMainWindow):
         _layout = QGridLayout(self.horizontalGroupBox)
         _layout.addWidget(self.gamewidget,0,0)
         _layout.addWidget(self.scorewidget,0,1)
-        _layout.setHorizontalSpacing(40)
+        _layout.setHorizontalSpacing(20)
         _layout.setColumnMinimumWidth(0,self.height())
         _layout.rowMinimumHeight(int(2*self.width()/3))
 
@@ -164,6 +164,8 @@ class MainWindow(QMainWindow):
         self.player2 = Player()
         self.player1.set_opps(self.player2)
         self.game = Game(self.board, self.player1, self.player2)
+        self.gamewidget.game = self.game
+        self.scorewidget.game = self.game
         self.gamewidget.update()
         self.scorewidget.update()
 

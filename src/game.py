@@ -83,6 +83,9 @@ class Game:
                 done = self.jmp_stone(player, vn, vn_old)
                 if done:
                     self.end_move(player)
+            else:
+                if player.phase == 4 or player.phase == 5:
+                    self.check_for_win()
 
     def get_stone_at_vert(self, q, vn):
         for st in q.activ_stones:
@@ -113,6 +116,8 @@ class Game:
             self.board.vertices[vn].occ = True
             if self.muhle_check(p, stone):
                 self.newmuhle = True
+                if debugmode:
+                    print("New Muhle")
             return True
         else:
             return False
@@ -137,6 +142,8 @@ class Game:
             self.board.vertices[vn].occ = True
             if self.muhle_check(p, stone):
                 self.newmuhle = True
+                if debugmode:
+                    print("New Muhle")
             return True
         else:
             return False
@@ -156,12 +163,15 @@ class Game:
     def same_vertical_line(self, stone1, stone2):
         v1 = self.board.vertices[stone1.vert]
         v2 = self.board.vertices[stone2.vert]
+        exep = [[1, 4, 7], [16, 19, 22]]
         x1 = v1.x
         y1 = v1.y
         x2 = v2.x
         y2 = v2.y
-        if x1 == x2 and ((stone1.vert <= 11 and stone2.vert <= 11) or (stone1.vert >= 12 and stone2.vert >= 12)):
+
+        if x1 == x2 and ((stone1.vert not in exep[0] and stone2.vert not in exep[0]) or (stone1.vert not in exep[1] and stone2.vert not in exep[1])):
             return True
+
         else:
             return False
 
@@ -173,7 +183,7 @@ class Game:
         for stone2 in player.activ_stones:
             if self.same_horizontal_line(stone, stone2):
                 horizontal_neighbourhood.append(stone2)
-            elif self.same_vertical_line(stone, stone2):
+            if self.same_vertical_line(stone, stone2):
                 vertical_neighbourhood.append(stone2)
         if len(horizontal_neighbourhood) == 3 or len(vertical_neighbourhood) == 3:
             if debugmode:
@@ -244,6 +254,8 @@ class Game:
         for p in self.players:
             if len(p.inactiv_stones) + len(p.activ_stones) < 3:
                 winner = p.opp
+                p.opp.phase = 4
+                p.opp.phase = 5
                 index = self.players.index(p.opp)
                 if self.commode:
                     if index > 0:
@@ -251,4 +263,4 @@ class Game:
                     else:
                         print("Der Spieler gewinnt")
                 else:
-                    print("Spieler" + str(index + 1) + " gewinnt!")
+                    print("Spieler" + str(index + 1) + " gewinnt! Grund: Gegner hat weniger als 3 Steine")
