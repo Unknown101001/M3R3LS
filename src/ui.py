@@ -244,7 +244,7 @@ class MainWindow(QMainWindow):
             b = min([self.height() - 60, self.width() - 360])
             self.gamewidget.resize(b,b)
             self.scorewidget.resize(self.width() - b - 90, b)
-            self.scorewidget.move(self.width() - 30 - (self.width() - b - 90),15)
+            self.scorewidget.move(self.width() - 30 - (self.width() - b - 90),10)
 
 
     def menu_pressed(self):

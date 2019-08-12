@@ -137,6 +137,8 @@ class Game:
     def jmp_stone(self, p, vn, vn_old):
         if not self.board.vertices[vn].occ:
             stone = self.get_stone_at_vert(p, vn_old)
+            if stone is None:
+                return False
             stone.vert = vn
             self.board.vertices[vn_old].occ = False
             self.board.vertices[vn].occ = True

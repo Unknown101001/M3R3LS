@@ -105,16 +105,14 @@ class Game_Widget(QFrame):
                             v2[1] - v1[1] - self.vertex_size)
             qp.end()
 
-
         def draw_vert(v):
             qp = QtGui.QPainter()
             qp.begin(self)
             qp.setBrush(QtGui.QColor(43, 29, 14, 120))
             qp.drawRect(v[0]
-                        ,v[1],
-                        self.vertex_size,self.vertex_size)
+                        , v[1],
+                        self.vertex_size, self.vertex_size)
             qp.end()
-
 
         for i in range(len(self.adj_mat[0, :])):
             for j in range(len(self.adj_mat[0, :])):
@@ -133,13 +131,11 @@ class Game_Widget(QFrame):
                     sx = self.vertices[vn][0]
                     sy = self.vertices[vn][1]
 
-
-                    #qp = QtGui.QPainter(self)
+                    # qp = QtGui.QPainter(self)
                     qp.begin(self)
-                    rec = QRect(sx-5,sy-5,50,50)
-                    qp.drawPixmap(rec,self.stone_img[stone.color])
+                    rec = QRect(sx - 5, sy - 5, 50, 50)
+                    qp.drawPixmap(rec, self.stone_img[stone.color])
                     qp.end()
-
 
     def get_vertexnum_from_offset(self, offset):
         ox = offset.x()
@@ -180,50 +176,61 @@ class Game_Widget(QFrame):
 
         self.vertices = [scale((v.x, v.y)) for v in unscaled_vertices]
 
-
     def game_clicked_vert(self):
         self.game.clicked_vert(self.last_clicked_vert, self.last_last_clicked_vert)
         self.update()
 
 
-class Score_Widget(QFrame):
-    resized = QtCore.pyqtSignal()
+class Score_Widget(QWidget):
 
-    def __init__(self,game):
-        super(QFrame, self).__init__()
-        self.initUI()
-        self.resized.connect(self.resizegame)
+    def __init__(self, game):
+        super(QWidget, self).__init__()
         self.setMinimumHeight(200)
         self.setMaximumWidth(300)
         self.game = game
-        self.text = "M3R3LS"
+        self.initUI()
 
     def initUI(self):
-        self.overlay = Overlay(self)
-        self.overlay.resize(self.width() + 1, self.height() + 1)
-
-    def set_text(self,text):
-        self.text = text
-        self.repaint()
-
-
-    def resizeEvent(self, a0: QtGui.QResizeEvent) -> None:
-        self.resized.emit()
-        return super(Score_Widget, self).resizeEvent(a0)
-
-    def resizegame(self):
-        self.overlay.resize(self.width() + 1, self.height() + 1)
-
-    def paintEvent(self, a0: QtGui.QPaintEvent) -> None:
+        self.frame1 = Player_Frame("name", self.game, self.game.player1)
+        self.frame2 = Player_Frame("name", self.game, self.game.player2)
+        layout = QGridLayout()
+        layout.addWidget(self.frame1,0,0)
+        layout.addWidget(self.frame2,1,0)
+        layout.setHorizontalSpacing(10)
+        self.setLayout(layout)
+    def paintEvent(self, e):
         qp = QtGui.QPainter()
         qp.begin(self)
-        qp.setBrush(QtGui.QColor(43, 29, 14, 120))
-        qp.drawRoundedRect(10,10,self.width()-20, 80,10,10)
-        qp.setFont(QFont("Arial",40))
-        qp.drawText(30,80,self.text)
+        qp.setBrush(QtGui.QColor(255, 255, 255, 80))
+        qp.drawRect(-1, -1, self.width(), self.height())
         qp.end()
 
 
 
 
+class Player_Frame(QFrame):
+    resized = QtCore.pyqtSignal()
 
+    def __init__(self, name, game, player):
+        super(QFrame, self).__init__()
+        self.name = name
+        self.game = game
+        self.player = player
+        self.resized.connect(self.resizeframe)
+        self.initUI()
+
+    def initUI(self):
+        self.overlay = Overlay(self)
+        self.overlay.resize(self.width() + 1, self.height() + 1)
+
+    def paintEvent(self, e):
+        pass
+
+
+
+    def resizeEvent(self, a0: QtGui.QResizeEvent) -> None:
+        self.resized.emit()
+        return super(Player_Frame, self).resizeEvent(a0)
+
+    def resizeframe(self):
+        self.overlay.resize(self.width() + 1, self.height() + 1)
