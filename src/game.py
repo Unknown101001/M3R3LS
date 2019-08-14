@@ -100,6 +100,10 @@ class Game:
             stone.activ = True
             p.activ_stones.append(stone)
             self.board.vertices[vn].occ = True
+            if self.muhle_check(p, stone):
+                self.newmuhle = True
+                if debugmode:
+                    print("New Muhle")
             return True
         else:
             return False
@@ -178,8 +182,6 @@ class Game:
             return False
 
     def muhle_check(self, player, stone):
-        if player.phase == 0:
-            return False
         horizontal_neighbourhood = []
         vertical_neighbourhood = []
         for stone2 in player.activ_stones:
@@ -213,7 +215,10 @@ class Game:
     def check_phases(self):
         for p in self.players:
             if len(p.inactiv_stones) > 0:
-                p.phase = 0
+                if not self.newmuhle:
+                    p.phase = 0
+                else:
+                    p.phase = 2
             elif len(p.activ_stones) > 3:
                 if not self.newmuhle:
                     p.phase = 1
