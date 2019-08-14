@@ -217,14 +217,48 @@ class Player_Frame(QFrame):
         self.game = game
         self.player = player
         self.resized.connect(self.resizeframe)
+        self.color = self.player.inactiv_stones[0].color
         self.initUI()
+        self.onmove = True
 
     def initUI(self):
         self.overlay = Overlay(self)
         self.overlay.resize(self.width() + 1, self.height() + 1)
 
+
+        '''
+        stonelabel 
+        '''
+        self.stonesize = int(self.height()/6)
+        yimg = QImage("img/hell.png")
+        bimg = QImage("img/dunkel.png")
+        syimg = QPixmap().fromImage(yimg.scaled(QSize(self.stonesize, self.stonesize)))
+        sbimg = QPixmap().fromImage(bimg.scaled(QSize(self.stonesize, self.stonesize)))
+        self.stone_img = {"hell": syimg, "dunkel": sbimg}
+        self.stonelabel = QLabel()
+        self.stonelabel.setPixmap(self.stone_img[self.color])
+        '''
+        layout
+        '''
+        _layout = QVBoxLayout()
+        _layout.addWidget(self.stonelabel)
+        self.setLayout(_layout)
+
+
+
     def paintEvent(self, e):
-        pass
+        print(self.player.status)
+        if self.player.status!=2:
+            qp = QtGui.QPainter()
+            qp.begin(self)
+            qp.setBrush(QtGui.QColor(255, 255, 0, 120))
+            qp.drawRect(-1, -1, 11, self.height())
+            qp.drawRect(-1, -1, self.width(), 10)
+            qp.drawRect(self.width()-10,-1,10,self.height())
+            qp.drawRect(-1,self.height()-10,self.width(),10)
+            qp.end()
+
+
 
 
 
