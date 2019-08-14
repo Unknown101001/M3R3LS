@@ -2,4 +2,4 @@
 venv/
 *.swp
 __pychache__/
-
+src/__pychache__/
