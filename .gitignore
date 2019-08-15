@@ -3,3 +3,4 @@ venv/
 *.swp
 __pychache__/
 src/__pychache__/
+*.pyc
