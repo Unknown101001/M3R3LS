@@ -205,6 +205,10 @@ class Score_Widget(QWidget):
         qp.drawRect(-1, -1, self.width(), self.height())
         qp.end()
 
+    def update(self):
+        self.frame1.update()
+        self.frame2.update()
+
 
 
 
@@ -222,26 +226,112 @@ class Player_Frame(QFrame):
         self.onmove = True
 
     def initUI(self):
-        self.overlay = Overlay(self)
-        self.overlay.resize(self.width() + 1, self.height() + 1)
-
+        '''
+        layout
+        '''
+        self.verticalLayoutWidget = QtWidgets.QWidget(self)
+        self.verticalLayoutWidget.setGeometry(QtCore.QRect(9, 10, 381, 281))
+        self.verticalLayoutWidget.setAttribute(Qt.WA_TranslucentBackground)
+        self.verticalLayoutWidget.setObjectName("verticalLayoutWidget")
+        self.verticalLayout = QtWidgets.QVBoxLayout(self.verticalLayoutWidget)
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout.setObjectName("verticalLayout")
 
         '''
         stonelabel 
         '''
         self.stonesize = int(self.height()/6)
-        yimg = QImage("img/hell.png")
-        bimg = QImage("img/dunkel.png")
-        syimg = QPixmap().fromImage(yimg.scaled(QSize(self.stonesize, self.stonesize)))
-        sbimg = QPixmap().fromImage(bimg.scaled(QSize(self.stonesize, self.stonesize)))
+        self.yimg = QImage("img/hell.png")
+        self.bimg = QImage("img/dunkel.png")
+        syimg = QPixmap().fromImage(self.yimg.scaled(QSize(self.stonesize, self.stonesize)))
+        sbimg = QPixmap().fromImage(self.bimg.scaled(QSize(self.stonesize, self.stonesize)))
         self.stone_img = {"hell": syimg, "dunkel": sbimg}
-        self.stonelabel = QLabel()
+        self.stonelabel = QLabel(self.verticalLayoutWidget)
         self.stonelabel.setPixmap(self.stone_img[self.color])
+        self.stonelabel.setAttribute(Qt.WA_TranslucentBackground)
+        self.stonelabel.setAlignment(QtCore.Qt.AlignCenter)
+
         '''
-        layout
+        grid
         '''
+        self.gridLayout = QtWidgets.QGridLayout()
+        self.gridLayout.setObjectName("gridLayout")
+
+
+        '''
+        labels in grid
+        '''
+        self.phase = QtWidgets.QLabel(self.verticalLayoutWidget)
+        self.phase.setAlignment(QtCore.Qt.AlignCenter)
+        self.phase.setObjectName("phase")
+        self.phase.setAttribute(Qt.WA_TranslucentBackground)
+        self.gridLayout.addWidget(self.phase, 0, 0, 1, 1)
+
+        self.phase_instruction = QtWidgets.QLabel(self.verticalLayoutWidget)
+        self.phase_instruction.setAlignment(QtCore.Qt.AlignCenter)
+        self.phase_instruction.setObjectName("phase_instruction")
+        self.phase_instruction.setAttribute(Qt.WA_TranslucentBackground)
+        self.gridLayout.addWidget(self.phase_instruction, 0, 1, 1, 1)
+
+
+        self.inactiv_stones_label = QtWidgets.QLabel(self.verticalLayoutWidget)
+        self.inactiv_stones_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.inactiv_stones_label.setObjectName("inactiv_stones_label")
+        self.inactiv_stones_label.setAttribute(Qt.WA_TranslucentBackground)
+        self.gridLayout.addWidget(self.inactiv_stones_label, 1, 1, 1, 1)
+
+        self.activ_stones_label = QtWidgets.QLabel(self.verticalLayoutWidget)
+        self.activ_stones_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.activ_stones_label.setObjectName("activ_stones_label")
+        self.activ_stones_label.setAttribute(Qt.WA_TranslucentBackground)
+        self.gridLayout.addWidget(self.activ_stones_label, 2, 1, 1, 1)
+
+        self.horizontalLayout = QtWidgets.QHBoxLayout()
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.label_2 = QtWidgets.QLabel(self.verticalLayoutWidget)
+        self.label_2.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_2.setObjectName("label_2")
+        self.label_2.setText("Stones in ")
+        self.label_2.setAttribute(Qt.WA_TranslucentBackground)
+        self.horizontalLayout.addWidget(self.label_2)
+        self.pocket_label = QtWidgets.QLabel(self.verticalLayoutWidget)
+        self.pocket_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.pocket_label.setObjectName("pocket_label")
+        self.pocket_label.setAttribute(Qt.WA_TranslucentBackground)
+        self.horizontalLayout.addWidget(self.pocket_label)
+        self.gridLayout.addLayout(self.horizontalLayout, 1, 0, 1, 1)
+
+        self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        self.label_4 = QtWidgets.QLabel(self.verticalLayoutWidget)
+        self.label_4.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_4.setObjectName("label_4")
+        self.label_4.setText("Stones on ")
+        self.label_4.setAttribute(Qt.WA_TranslucentBackground)
+        self.horizontalLayout_2.addWidget(self.label_4)
+        self.field_label = QtWidgets.QLabel(self.verticalLayoutWidget)
+        self.field_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.field_label.setObjectName("field_label")
+        self.field_label.setAttribute(Qt.WA_TranslucentBackground)
+        self.horizontalLayout_2.addWidget(self.field_label)
+        self.gridLayout.addLayout(self.horizontalLayout_2, 2, 0, 1, 1)
+
+
+        '''
+        vertical Layout
+        '''
+        self.verticalLayout.addWidget(self.stonelabel)
+        self.verticalLayout.addLayout(self.gridLayout)
+
+
+
         _layout = QVBoxLayout()
-        _layout.addWidget(self.stonelabel)
+        _layout.setAlignment(Qt.AlignCenter)
+        _layout.addWidget(self.verticalLayoutWidget)
+        sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        sizePolicy.setHorizontalPolicy(0)
+        sizePolicy.setVerticalStretch(0)
+        self.verticalLayoutWidget.setSizePolicy(sizePolicy)
         self.setLayout(_layout)
 
 
@@ -259,6 +349,10 @@ class Player_Frame(QFrame):
             qp.end()
 
 
+    def update(self, *__args):
+        self.repaint()
+
+
 
 
 
@@ -267,4 +361,9 @@ class Player_Frame(QFrame):
         return super(Player_Frame, self).resizeEvent(a0)
 
     def resizeframe(self):
-        self.overlay.resize(self.width() + 1, self.height() + 1)
+        self.stonesize = int(self.height() / 6)
+        syimg = QPixmap().fromImage(self.yimg.scaled(QSize(self.stonesize, self.stonesize)))
+        sbimg = QPixmap().fromImage(self.bimg.scaled(QSize(self.stonesize, self.stonesize)))
+        self.stone_img = {"hell": syimg, "dunkel": sbimg}
+        self.stonelabel = QLabel()
+        self.stonelabel.setPixmap(self.stone_img[self.color])

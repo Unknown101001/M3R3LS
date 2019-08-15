@@ -24,6 +24,9 @@ class Game:
             self.players = [player1, player2]
             self.player1.set_opps(self.player2)
         self.init_Game()
+        self.player1.status = 0
+        self.player2.status = 2
+        self.lastmuhle = 0
 
     def init_Player(self, p, color):
         for i in range(self.starting_n):
@@ -102,6 +105,7 @@ class Game:
             self.board.vertices[vn].occ = True
             if self.muhle_check(p, stone):
                 self.newmuhle = True
+                self.lastmuhle = 0
                 if debugmode:
                     print("New Muhle")
             return True
@@ -120,6 +124,7 @@ class Game:
             self.board.vertices[vn].occ = True
             if self.muhle_check(p, stone):
                 self.newmuhle = True
+                self.lastmuhle = 0
                 if debugmode:
                     print("New Muhle")
             return True
@@ -148,6 +153,7 @@ class Game:
             self.board.vertices[vn].occ = True
             if self.muhle_check(p, stone):
                 self.newmuhle = True
+                self.lastmuhle = 0
                 if debugmode:
                     print("New Muhle")
             return True
@@ -239,35 +245,56 @@ class Game:
             player.opp.status = 0
         else:
             player.status = 1
+            player.opp.status = 2
 
         if debugmode:
             print("Zug beendet")
 
-        if self.commode:
-            time.sleep(1)
-            self.perform_com_move()
-        elif player.status == 1:
+
+        if player.status == 1:
             print("Remove a Stone")
-        else:
-            self.on_move = self.players.index(player.opp) + 1
+            if self.commode:
+                time.sleep(1)
+                self.perform_com_move()
+            else:
+                self.on_move = self.players.index(player.opp) + 1
         self.newmuhle = False
+        self.lastmuhle += 1
         self.check_for_win()
+
 
     def perform_com_move(self):  # todo COM
         time.sleep(1)
         print("Dont know what to do")
 
     def check_for_win(self):  # todo remis
+        if self.lastmuhle >= 50:
+            for p in self.players:
+                p.phase = 5
+                print("Remis : 50 Zuege ohne Muehle! ")
+
+        if self.check_for_same_configs():
+            for p in self.players:
+                p.phase = 5
+                print("Remis : 3 gleiche Configurationen! ")
+
         for p in self.players:
             if len(p.inactiv_stones) + len(p.activ_stones) < 3:
                 winner = p.opp
                 p.opp.phase = 4
-                p.opp.phase = 5
+                p.phase = 5
                 index = self.players.index(p.opp)
                 if self.commode:
                     if index > 0:
-                        print("Der Bot gewinnt")
+                        print("Der Bot gewinnt! Grund: Gegner hat weniger als 3 Steine")
                     else:
-                        print("Der Spieler gewinnt")
+                        print("Der Spieler gewinnt! Grund: Gegner hat weniger als 3 Steine")
                 else:
                     print("Spieler" + str(index + 1) + " gewinnt! Grund: Gegner hat weniger als 3 Steine")
+
+    def get_current_configuration(self):
+        pass
+    def write_configuration_to_savelist(self):
+        pass
+    def check_for_same_configs(self):
+        pass
