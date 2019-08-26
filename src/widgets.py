@@ -188,11 +188,11 @@ class Score_Widget(QWidget):
         self.setMinimumHeight(200)
         self.setMaximumWidth(300)
         self.game = game
+        self.frame1 = Player_Frame("name", game, self.game.player1)
+        self.frame2 = Player_Frame("name", game, self.game.player2)
         self.initUI()
 
     def initUI(self):
-        self.frame1 = Player_Frame("name", self.game, self.game.player1)
-        self.frame2 = Player_Frame("name", self.game, self.game.player2)
         layout = QGridLayout()
         layout.addWidget(self.frame1,0,0)
         layout.addWidget(self.frame2,1,0)
@@ -223,7 +223,6 @@ class Player_Frame(QFrame):
         self.resized.connect(self.resizeframe)
         self.color = self.player.inactiv_stones[0].color
         self.initUI()
-        self.onmove = True
 
     def initUI(self):
         '''
@@ -240,7 +239,7 @@ class Player_Frame(QFrame):
         '''
         stonelabel 
         '''
-        self.stonesize = int(self.height()/6)
+        self.stonesize = int(self.height()/8)
         self.yimg = QImage("img/hell.png")
         self.bimg = QImage("img/dunkel.png")
         syimg = QPixmap().fromImage(self.yimg.scaled(QSize(self.stonesize, self.stonesize)))
@@ -337,8 +336,7 @@ class Player_Frame(QFrame):
 
 
     def paintEvent(self, e):
-        print(self.player.status)
-        if self.player.status!=2:
+        if self.player.opp.status==2:
             qp = QtGui.QPainter()
             qp.begin(self)
             qp.setBrush(QtGui.QColor(255, 255, 0, 120))
@@ -349,8 +347,12 @@ class Player_Frame(QFrame):
             qp.end()
 
 
-    def update(self, *__args):
+    def update(self):
+        print("Update")
+        self.inactiv_stones_label.setText(str(len(self.game.player1.inactiv_stones)))
+        self.activ_stones_label.setText(str(len(self.player.activ_stones)))
         self.repaint()
+
 
 
 
@@ -361,7 +363,7 @@ class Player_Frame(QFrame):
         return super(Player_Frame, self).resizeEvent(a0)
 
     def resizeframe(self):
-        self.stonesize = int(self.height() / 6)
+        self.stonesize = int(self.height() / 8)
         syimg = QPixmap().fromImage(self.yimg.scaled(QSize(self.stonesize, self.stonesize)))
         sbimg = QPixmap().fromImage(self.bimg.scaled(QSize(self.stonesize, self.stonesize)))
         self.stone_img = {"hell": syimg, "dunkel": sbimg}

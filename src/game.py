@@ -88,6 +88,7 @@ class Game:
                     self.end_move(player)
             else:
                 if player.phase == 4 or player.phase == 5:
+                    print("Game over")
                     self.check_for_win()
 
     def get_stone_at_vert(self, q, vn):
@@ -238,14 +239,21 @@ class Game:
 
     def end_move(self, player):
         self.check_phases()
-
         self.set_muhles()
+
         if player.phase != 2:
+
             player.status = 2
             player.opp.status = 0
+            if debugmode:
+                print("ending move, switching status")
+                print("Player1:" + str(self.player1.status))
+                print("Player2:" + str(self.player2.status))
+
         else:
             player.status = 1
             player.opp.status = 2
+
 
         if debugmode:
             print("Zug beendet")
@@ -253,6 +261,7 @@ class Game:
 
         if player.status == 1:
             print("Remove a Stone")
+        else:
             if self.commode:
                 time.sleep(1)
                 self.perform_com_move()
@@ -261,6 +270,7 @@ class Game:
         self.newmuhle = False
         self.lastmuhle += 1
         self.check_for_win()
+
 
 
     def perform_com_move(self):  # todo COM
